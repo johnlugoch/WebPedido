@@ -1,0 +1,197 @@
+﻿@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+
+    <!-- Bootstrap CSS -->
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+    
+    
+    <link href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" rel="stylesheet">
+
+
+    <!-- CDN PASARLO PARA ACA SOLUCIONA EL PROBLEMA DE PAGINACION-->
+    <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+
+    <title>Hello, world!</title>
+</head>
+<body>
+
+    <div id="content-wrapper">
+        <div class="container-fluid">
+            <h1>Creación de Cliente</h1>
+            <div class="row">
+                <div class="span6 offset3">
+                    <p style="line-height: 70px; text-align: center;">
+                        <button id="nuevo" class="btn btn-light">Nuevo</button>
+                        <button id="editar" class="btn btn-light">Editar</button>
+                        <button id="eliminar" class="btn btn-light">Eliminar</button>
+                        <button id="buscar" class="btn btn-light">Buscar</button>
+                    </p>
+                </div>
+            </div>
+            <!--<div id="mensaje">Cliente guardado</div>-->
+            <form id="submit_form">
+                <div class="row">
+                    <div class="col-md-1"><label for="">Código</label></div>
+                    <div class="col-md-2"><input name="codigo" id="codigo" type="text" required class="form-control" onFocus="this.blur()"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1"><label for="">Nombres</label></div>
+                    <div class="col-md-2"><input name="nombre" id="nombre" type="text" required class="form-control"></div>
+                    <div class="col-md-1"><label for="">Apellidos</label></div>
+                    <div class="col-md-2"><input name="apellido" id="apellido" type="text" required class="form-control"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1"><label for="">Identificación</label></div>
+                    <div class="col-md-2"><input name="id" id="id" type="text" class="form-control input-number" value="" required></div>
+                    <div class="col-md-1"><label for="">Dirección</label></div>
+                    <div class="col-md-2"><input name="direccion" id="direccion" type="text" required class="form-control"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1"><label for="">Teléfono</label></div>
+                    <div class="col-md-2"><input name="telefono" id="telefono" type="text" class="form-control input-number"></div>
+                    <div class="col-md-1"><label for="">Ciudad</label></div>
+                    <div class="col-md-2"><select name="ciudad" id="ciudad" class="form-control"></select></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1"><label for="">Correo</label></div>
+                    <div class="col-md-2"><input name="correo" id="correo" type="text" class="form-control"></div>
+                </div>
+                <div class="row">
+                    <div class="span6 offset3">
+                        <p style="line-height: 70px; text-align: center;">
+                            <input type="button" name="submit" id="submit" class="btn btn-info" value="Submit" />
+                            <!--<span id="error_message" class="text-danger"></span>
+                            <span id="success_message" class="text-success"></span>-->
+
+                        </p>
+                    </div>
+                </div>
+            </form>
+            <span id="error_message" class="text-danger"></span>
+            <span id="success_message" class="text-success"></span>
+
+            <!-- DataTables Example -->
+            <div class="card mb-3">
+                <div class="card-header"><i class="fas fa-table"></i> Listado de Clientes </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <!--Aquí comienza diseño de filtros en la grid-->
+                        <!--<table id="tbl" class="display" style="width:100%">-->
+                        <table class="table table-bordered" id="tbl" style="width:100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Cod</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>Identificacion</th>
+                                    <th>Dirección</th>
+                                    <th>Teléfono</th>
+                                    <th>Correo</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th>Cod</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>Identificacion</th>
+                                    <th>Dirección</th>
+                                    <th>Teléfono</th>
+                                    <th>Correo</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="resultas"></div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <!--DataTables-->
+    <!--https://code.jquery.com/jquery-3.3.1.js-->
+
+    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+
+
+    <script src="~/Scripts/main.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            listarClientes();
+            //cargar_ciudad();
+            readText();
+            $("#nuevo").click(function () {
+                obtenerConsecutivo();
+            })
+            $('#submit').click(function () {
+                guardarCliente();
+            });
+            $("#editar").click(function () {
+                actualizarCliente();                
+                location.reload();
+            })
+            $("#eliminar").click(function () {
+                eliminarCliente();                
+                location.reload();
+            })
+        });
+
+        $('.input-number').on('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        function cargar_ciudad() {
+            var array = ["BARRANQUILLA", "BOGOTA", "BUCARAMANGA", "BUENAVENTURA", "CALI"];
+            for (var i in array) {
+                document.getElementById("ciudad").innerHTML += "<option value='" + array[i] + "'>" + array[i] + "</option>";
+
+            }
+        }
+
+        function readText() {
+            jQuery.ajax({
+                url: "../Data/Ciudades.txt",
+                dataType: "text",
+                success: function (data) {
+                    var lines = data.split('\n'),
+                        htmlLines = '<option>' + lines.join('</option><option>') + '</option>';
+                    jQuery("#ciudad").append(htmlLines);
+                    //setTimeout(readText, 1000);
+                }
+            });
+        }
+
+
+
+
+
+
+
+    </script>
+
+</body>
+</html>

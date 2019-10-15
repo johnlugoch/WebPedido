@@ -1,0 +1,193 @@
+﻿@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+
+    <!-- Bootstrap CSS -->
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+
+
+    <link href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" rel="stylesheet">
+
+
+    <!-- CDN PASARLO PARA ACA SOLUCIONA EL PROBLEMA DE PAGINACION-->
+    <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+
+    <title>Alquiler</title>
+</head>
+<body>
+
+    <div id="content-wrapper">
+        <div class="container-fluid">
+            <h1>Alquiler de Peliculas</h1>
+
+            <!--<div id="mensaje">Cliente guardado</div>-->
+            <form id="submit_form">
+                <div class="row">
+                    <div class="col-md-2"><label for="">Código Alquiler</label></div>
+                    <div class="col-md-2"><input name="codigoa" id="codigoa" type="text" required class="form-control" onFocus="this.blur()"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"><label for="">Código Cliente</label></div>
+                    <div class="col-md-2"><input name="codigoc" id="codigoc" type="text" required class="form-control"></div>
+                    <!--<div class="col-md-1"><label for="">Nombre Cliente</label></div>-->
+                    <div class="col-md-2"><input name="nombre" id="nombre" type="text" required class="form-control"></div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-2"><label for="">Pelicula</label></div>
+                    <div class="col-sm-2">
+                        <select name="pelicula" id="pelicula" class="form-control">
+                            <option value=""></option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label for="">Cantidad</label></div>
+                    <div class="col-md-2"><input name="cantidad" id="cantidad" type="text" class="form-control input-number" value="" required></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"><label for="">Valor</label></div>
+                    <div class="col-md-2"><input name="valor" id="valor" type="text" class="form-control input-number"></div>
+                </div>
+                <div class="row">
+
+                </div>
+                <div class="row">
+                    <div class="span6 offset3">
+                        <p style="line-height: 70px; text-align: center;">
+                            <!--<input type="button" name="submit" id="submit" class="btn btn-info" value="Submit" /> -->
+                        </p>
+                    </div>
+                </div>
+                <div class="row">                    
+                    <div class="col-md-2"><label for="">Fecha Inicial</label></div>
+                    <div class="col-md-2">
+                        <input placeholder="Fecha Inicial" class="form-control" type="text" onfocus="(this.type='date')" id="fechaini">
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-2"><label for="">Fecha Final</label></div>
+                    <div class="col-md-2">
+                        <input placeholder="Fecha Final" class="form-control" type="text" onfocus="(this.type='date')" id="fechafin">
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                <div class="span6 offset3">
+                    <p style="line-height: 70px; text-align: center;">
+                        
+                        <button id="aceptar" class="btn btn-light">Aceptar</button>
+                        <button id="cancelar" class="btn btn-light">Cancelar</button>
+
+                    </p>
+                </div>
+            </div>
+
+            <span id="error_message" class="text-danger"></span>
+            <span id="success_message" class="text-success"></span>
+
+            <!-- DataTables Example -->
+            <div class="card mb-3">
+                <div class="card-header"><i class="fas fa-table"></i> Listado Alquiler </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <!--Aquí comienza diseño de filtros en la grid-->
+                        <!--<table id="tbl" class="display" style="width:100%">-->
+                        <table class="table table-bordered" id="tbl" style="width:100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>Pelicula</th>
+                                    <th>Cantidad</th>
+                                    <th>Valor</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                                <tr>
+                                    
+                                    <th>Pelicula</th>
+                                    <th>Cantidad</th>
+                                    <th>Valor</th>
+
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="resultas"></div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <!--DataTables-->
+    <!--https://code.jquery.com/jquery-3.3.1.js-->
+
+    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+
+
+    <script src="~/Scripts/main.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            listarPeliculas();    
+            listarAlquiler();
+            obtenerConsecutivoAlquiler();
+
+            $("#codigoc").blur(function () {
+                obtenerNombreCliente();
+            });
+
+            $('#aceptar').click(function () {
+                guardarAlquiler();
+                location.reload();
+            });
+            $('#pelicula').click(function () {
+                $('#cantidad').val("");
+                $('#valor').val("");
+            });
+            $("#cantidad").blur(function () {
+                obtenerPrecio();                
+            });
+          
+        });
+
+        
+
+        $('.input-number').on('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+
+
+
+
+
+
+    </script>
+
+</body>
+</html>
